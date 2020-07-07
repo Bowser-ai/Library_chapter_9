@@ -15,6 +15,7 @@ class Library
 		void add_patron(const Patron& patron) {patrons.push_back(patron);}
 		void checkout_book(const Book&, const Patron&, const Chrono::Date&) const;
 		void checkin_book(const Book&, const Patron&, const Chrono::Date&) const;
+        void print_books(std::ostream& os) const;
 		std::vector<Patron> get_patrons_with_fee() const;
 
 	private:

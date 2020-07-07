@@ -6,7 +6,7 @@ namespace Chrono
 
 	Date::Date(int year, Month month, int day): year{year}, month{month}, day{day}
 	{
-		if (!is_date(year, month, day)) throw Invalid{"Invalid date\n"};
+		if (!is_date(year, month, day)) throw Invalid{"Invalid date"};
 	}
 
 	void Date::add_day(int n)
@@ -39,12 +39,18 @@ namespace Chrono
 		{
 			if (k_v_pair.second == m) return k_v_pair.first;
 		}
-		throw std::runtime_error{"Invalid cast to string from month\n"};
+		throw std::runtime_error{"Invalid cast to string from month"};
 	}
 
 	Month Date::string_to_month(const std::string& s)
 	{
-		return month_mapping.at(s);
+        try{
+		    return month_mapping.at(s);
+        }
+        catch (std::out_of_range& e)
+        {
+            throw std::runtime_error{"Invalid month supplied"};
+        }
 	}
 
 	int max_days_in_month(Month month, int year)
@@ -101,19 +107,15 @@ namespace Chrono
 
 	std::istream& operator >>(std::istream& is, Date& d)
 	{
-		auto error = std::runtime_error{"Date format should be '(y, m, d)'"};
+		auto error = std::runtime_error{"Date format should be '(y m d)'"};
 		char ch{};
 		is.get(ch);
 		if (ch != '(') throw error;
 		int y{0};
 		is >> y;
-		is.get(ch);
-		if (ch != ',') throw error;
 		std::string month;
 		is >> month;
 		Month m = Date::string_to_month(month);
-		is.get(ch);
-		if (ch != ',') throw error;
 		int day{0};
 		is >> day;
 		is.get(ch);
@@ -130,5 +132,4 @@ namespace Chrono
 		{"September", Month::september}, {"October", Month::october},
 		{"November", Month::november}, {"December", Month::december}
 	};
-
 }
