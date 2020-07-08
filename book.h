@@ -41,8 +41,16 @@ class Book
 		mutable bool is_checked_out{false};
 
 		static const std::unordered_map<Genre, std::string>genre_mapping;
+
 		static std::string genre_to_string(Genre g) {return genre_mapping.at(g);}
         static Genre string_to_genre(const std::string&);
+		static void check_isbn(const std::string&);
+		static void prompt_and_stream_in(
+				std::string&, 
+				const std::string&, 
+				std::istream&, 
+				std::ostream& = std::cout);
 };
 
+void report_error_and_clean(const std::string& error, std::istream& is);
 #endif

@@ -1,7 +1,22 @@
+#include <fstream>
 #include "library.h"
+
+class Bad_stream : public std::exception
+{
+	public:
+		Bad_stream(const char* msg): msg{msg}{};
+		virtual const char* what() const noexcept override{return msg;}
+
+	private:
+		const char* msg;
+};
+
+
 
 int main()
 {
+	std::ifstream ifs{"test.txt"};
+	if (!ifs) throw Bad_stream{"file stream not ok\n"};
     Library lib;
     while(true)
     {
@@ -19,7 +34,7 @@ int main()
             {
                 case '1':
                     {
-                        Book book = Book::stream_in_book(std::cin);
+                        Book book = Book::stream_in_book(ifs);
                         lib.add_book(book);
                         break;
                     }
@@ -36,9 +51,7 @@ int main()
         }
         catch (std::runtime_error& e)
         {
-            std::cerr << e.what() <<"\n";
-            std::cin.clear();
-            std::cin.ignore(10000, '\n');
+			report_error_and_clean(e.what(), ifs);
         }
         catch (std::exception& e)
         {

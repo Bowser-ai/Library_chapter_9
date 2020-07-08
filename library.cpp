@@ -1,5 +1,6 @@
 #include "library.h"
 #include <algorithm>
+#include <iomanip>
 
 const Book& Library::find_book(const Book& book) const
 {
@@ -37,6 +38,8 @@ void Library::create_transaction(const Book& book, const Patron& patron, const C
 
 void Library::print_books(std::ostream& os) const
 {
+	os << "title" << std::right << std::setw(20) << "author" << std::right << std::setw(20) 
+       << "genre" << std::right << std::setw(20) << "ISBN" << "\n";
     for (const auto& book : books)
     {
         os << book << "\n";
