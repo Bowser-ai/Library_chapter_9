@@ -37,6 +37,12 @@ namespace Chrono
 			static const std::unordered_map<std::string, Month> month_mapping;
 	};
 
+	enum class Day
+	{
+		sunday = 0, monday, thuesday, wednesday, thursday, friday, saturday
+	};
+
+	//helper functions
 	int max_days_in_month(Month m, int year);
 	bool is_date(int y, Month m, int d);
 	bool leapyear(int y);
@@ -44,9 +50,11 @@ namespace Chrono
 	bool operator !=(const Date& d1, const Date& d2);
 	std::ostream& operator <<(std::ostream& os, const Date& d);
 	std::istream& operator >>(std::istream& is, Date& d);
-	Date day_of_week(const Date& d);
+	int get_day_from_date(const Date&);
+	Day day_of_week(const Date& d);
 	Date next_sunday(const Date& d);
-	Date next_weekday(const Date& d);
+	Day next_weekday(const Date& d);
+	Date next_workday(const Date& d);
 	std::ostream& operator<<(std::ostream&, const Month&);
 	std::ostream& operator<<(std::ostream&, const Date&);
 	std::istream& operator>>(std::istream&, Date&);

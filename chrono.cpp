@@ -1,4 +1,5 @@
 #include "chrono.h"
+#include <sstream>
 
 namespace Chrono
 {
@@ -132,4 +133,69 @@ namespace Chrono
 		{"September", Month::september}, {"October", Month::october},
 		{"November", Month::november}, {"December", Month::december}
 	};
+
+	int get_day_from_date(const Date& date)
+	{
+		std::stringstream ss;
+		ss << date.get_year();
+		std::string str_year;
+		ss >> str_year;
+		const std::string sliced_year{str_year.substr(2, 2)};
+		const int year_last_digts{std::stoi(sliced_year)};
+		const int year_code{(year_last_digts + (year_last_digts / 4)) % 7};
+		std::unordered_map<std::string, int> month_mapping {
+			{"January", 0}, {"February", 3},
+			{"March", 3}, {"April", 6},
+			{"May", 1}, {"June", 4}, 
+			{"July", 6}, {"August", 2},
+			{"September", 5}, {"October", 0},
+			{"November", 3}, {"December", 5}
+		};
+		const int month_code{month_mapping[Date::month_to_string(date.get_month())]}; 
+		std::unordered_map<int, int> century_codes {
+			{17, 4}, {18, 2}, {19, 0}, {20, 6}, {21, 4}, {22, 2}, {23, 0}
+		};
+		const int century_code{century_codes[date.get_year() / 100]};
+		const bool leap_year_code{leapyear(date.get_year()) 
+			&& (date.get_month() == Month::january || date.get_month() == Month::february)};
+		const int day_of_the_week{(year_code + month_code + century_code + date.get_day() - static_cast<int>(leap_year_code)) % 7};
+		return day_of_the_week;
+	}
+
+	Date next_workday(const Date& date)
+	{
+		constexpr int friday{5};
+		constexpr int saturday{6};
+		constexpr int days_friday_to_monday{3};
+		constexpr int days_saturday_to_monday{2};
+		const int current_day{get_day_from_date(date)};
+		Chrono::Date new_date{date};
+		switch (current_day)
+		{
+			case friday: 
+				new_date.add_day(days_friday_to_monday);
+				break;
+			case saturday: 
+				new_date.add_day(days_saturday_to_monday);
+				break;
+			default:
+				new_date.add_day(1);
+				break;
+		}
+		return new_date;
+	}
+
+	Day day_of_the_week(const Date& date)
+	{
+		const int day_code{get_day_from_date(date)};
+		return static_cast<Day>(day_code);
+	}
+
+	Day next_weekday(const Date& date)
+	{
+		const int day_code{get_day_from_date(date)};
+		const int next_day_code{(day_code + 1) % 7};
+		return static_cast<Day>(next_day_code);
+	}
+		
 }
