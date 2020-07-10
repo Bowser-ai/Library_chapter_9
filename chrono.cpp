@@ -197,5 +197,13 @@ namespace Chrono
 		const int next_day_code{(day_code + 1) % 7};
 		return static_cast<Day>(next_day_code);
 	}
+	Date next_sunday(const Date& date)
+	{
+		const int day_code{get_day_from_date(date)};
+		const int advance_day_til_sunday{7 - day_code};
+		Chrono::Date next_sunday{date};
+		next_sunday.add_day(advance_day_til_sunday);
+		return next_sunday;
+	}
 		
 }

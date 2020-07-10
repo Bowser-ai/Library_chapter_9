@@ -45,6 +45,12 @@ SUITE(DateTests)
 		CHECK_EQUAL(int(Chrono::Day::monday), int(next_weekday(sunday)));
 		CHECK_EQUAL(int(Chrono::Day::thuesday), int(next_weekday(monday)));
 	}
+	TEST(next_sunday)
+	{
+		Chrono::Date date{2020, Chrono::Month::july, 10};
+		Chrono::Date next_sunday_date{2020, Chrono::Month::july, 12};
+		CHECK_EQUAL(next_sunday_date, next_sunday(date));
+	}
 
 }
 
